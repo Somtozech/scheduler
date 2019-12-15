@@ -62,19 +62,27 @@
 			});
 		}
 
+		//find all tasks and project
+		findAll(callback) {
+			chrome.storage.sync.get(this.dbName, store => {
+				callback.call(this, store[this.dbName].projects);
+			});
+		}
+
 		// find all tasks  available in the active Project if any or just return the tasks in the first project
 		find(callback) {
 			chrome.storage.sync.get(this.dbName, store => {
 				let projects = store[this.dbName].projects;
-				if (store.activeId) {
+				let activeId = store[this.dbName].activeId;
+				if (typeof activeId !== 'undefined') {
 					for (let project of projects) {
-						if (project.id === activeId) {
+						if (project.id == activeId) {
 							return callback.call(this, project);
 						}
 					}
 				}
 
-				store.activeId = projects[0].id;
+				store[this.dbName].activeId = projects[0].id;
 
 				chrome.storage.sync.set(store, () => {
 					callback.call(this, projects[0]);
@@ -112,9 +120,7 @@
 		// save tasks
 		createProject(name, callback = defaultCallback) {
 			chrome.storage.sync.get(this.dbName, store => {
-				console.log(store);
 				let projects = store[this.dbName].projects;
-				console.log(projects);
 				let data = {
 					name,
 					id: Date.now(),
@@ -133,7 +139,6 @@
 		setActiveId(id, callback = defaultCallback) {
 			chrome.storage.sync.get(this.dbName, store => {
 				store[this.dbName].activeId = id;
-
 				chrome.storage.sync.set(store, () => {
 					callback.call(this, store[this.dbName].projects);
 				});

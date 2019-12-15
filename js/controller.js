@@ -20,19 +20,20 @@
 		// update Project List in the sidebar
 		showProjectList() {
 			this.model.findProjects(data => {
-				this.projectList.innerHTML = this.view.compileProjects(data);
-			});
-		}
-
-		//add a new project
-		addProject(name, cb) {
-			this.model.createProject(name, (data, id) => {
+				let id = data[0].id;
 				this.projectList.innerHTML = this.view.compileProjects(data, id);
 			});
 		}
 
+		//add a new project
+		addProject(name) {
+			this.model.createProject(name, (data, id) => {
+				this.setActiveId(id);
+			});
+		}
+
 		setActiveId(id) {
-			this.model.setActiveId(id, () => {
+			this.model.setActiveId(id, data => {
 				this.showAll();
 				this.projectList.innerHTML = this.view.compileProjects(data, id);
 			});
@@ -43,7 +44,9 @@
 			this.model.find(store => {
 				let data = store.tasks;
 				this.taskList.innerHTML = this.view.compile(data);
-				this.summary.innerHTML = this.view.compileTaskCount(store);
+				this.model.findAll(data => {
+					this.summary.innerHTML = this.view.compileTaskCount(data);
+				});
 			});
 		}
 

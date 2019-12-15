@@ -55,6 +55,26 @@ createProjectForm.addEventListener('submit', e => {
 	modal.style.display = 'none';
 });
 
+/**
+ * Noticed That if i clicked on the project list. Am also able to click it the child element ie label and span
+ *  I created this function to check if the clicked element is the project list or its child
+ */
+
+function hasClassorParent(element, classname) {
+	if (element.classList && element.classList.contains(classname)) {
+		return element;
+	}
+
+	return element.parentNode && hasClassorParent(element.parentNode, classname);
+}
+
+$$('#navList').addEventListener('click', e => {
+	let target = hasClassorParent(e.target, 'navlink');
+	if (target) {
+		Project.controller.setActiveId(target.dataset.id);
+	}
+});
+
 class App {
 	constructor() {
 		this.storage = new app.Store('scheduler-list');

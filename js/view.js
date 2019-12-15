@@ -40,9 +40,9 @@
 				let template = this.defaultTemplate;
 				let task = data[i];
 				let checked = task.completed ? 'checked' : '';
-				template = template.replace(/{{id}}/, task.id);
+				template = template.replace('{{id}}', task.id);
 				template = template.replace('{{title}}', task.title);
-				template = template.replace(/{{checked}}/, checked);
+				template = template.replace('{{checked}}', checked);
 
 				view += template;
 			}
@@ -50,18 +50,14 @@
 			return view;
 		}
 
-		compileProjects(data, activeId) {
+		compileProjects(data, activeId = '') {
 			let view = '';
 			for (let i = 0; i < data.length; i++) {
 				let project = data[i];
 				let template = this.defaultProjectTemplate;
-				// if a valid project id is provided then make the project active
-				if (activeId && project.id === activeId) {
-					template = template.replace('{{active}}', 'active');
-				} else if (i === 0) {
-					// else make the first project active
-					template = template.replace('{{active}}', 'active');
-				}
+				let active = project.id == activeId ? 'active' : '';
+
+				template = template.replace('{{active}}', active);
 				template = template.replace('{{name}}', project.name);
 				template = template.replace('{{id}}', project.id);
 				view += template;
