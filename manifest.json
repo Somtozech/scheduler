@@ -1,0 +1,14 @@
+{
+	"name": "Scheduler",
+	"version": "1.0",
+	"description": "Create Projects and Schedule tasks under each project",
+	"background": {
+		"scripts": ["js/background.js"],
+		"persistent": false
+	},
+	"permissions": ["storage"],
+	"browser_action": {
+		"default_icon": "icon/icon.png"
+	},
+	"manifest_version": 2
+}

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<link rel="stylesheet" href="fontawesome/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="css/tailwind.css" />
+		<link rel="stylesheet" href="css/style.css" />
+		<link
+			href="https://fonts.googleapis.com/css?family=Montserrat&display=swap"
+			rel="stylesheet"
+		/>
+	</head>
+	<body>
+		<div id="modal" class="modal flex justify-center">
+			<form id="createProject" class="bg-white rounded  h-64 ml-4 mt-10 px-6">
+				<div class="py-4  flex justify-between items-center">
+					<span class="font-bold">Add Project</span>
+					<i class="fa fa-close text-red-500 fa-2x" id="close-modal"></i>
+				</div>
+				<div class="mb-4">
+					<label
+						class="block text-gray-700 text-sm font-bold mb-2"
+						for="username"
+					>
+						Name
+					</label>
+					<input
+						class="shadow appearance-none border rounded w-full py-2  px-3 text-gray-700 leading-tight "
+						id="username"
+						type="text"
+						placeholder="Name of Project"
+					/>
+					<button
+						class="bg-button px-4 py-2 w-20 text-sm rounded mt-5"
+						type="submit"
+					>
+						Add
+					</button>
+				</div>
+			</form>
+		</div>
+
+		<div id="taskModal" class="modal flex justify-center">
+			<form class="bg-white rounded py-5 ml-4 mt-10 px-6">
+				<div class="py-4  flex justify-between items-center">
+					<span class="font-bold">Add Task</span>
+					<i class="fa fa-close text-red-500 fa-2x" id="closeTaskModal"></i>
+				</div>
+				<div class="mb-4">
+					<label class="block text-gray-700 text-sm font-bold mb-2" for="name">
+						Title
+					</label>
+					<input
+						class="shadow appearance-none border rounded w-full py-2  px-3 text-gray-700 leading-tight "
+						id="task-name"
+						type="text"
+						placeholder="Name of Task"
+					/>
+				</div>
+				<div class="mb-4">
+					<label class="block text-gray-700 text-sm font-bold mb-2" for="date">
+						Date
+					</label>
+					<input
+						class="shadow appearance-none border rounded w-full py-2  px-3 text-gray-700 leading-tight "
+						id="task-name"
+						type="date"
+						placeholder="Date For completion"
+					/>
+				</div>
+				<div class="mb-4">
+					<label class="block text-gray-700 text-sm font-bold mb-2" for="date">
+						Time
+					</label>
+					<input
+						class="shadow appearance-none border rounded w-full py-2  px-3 text-gray-700 leading-tight "
+						id="task-name"
+						type="time"
+						placeholder="Time For completion"
+					/>
+				</div>
+				<button
+					class="bg-button px-4 py-2 w-20 text-sm rounded mt-5"
+					type="submit"
+				>
+					Add
+				</button>
+			</form>
+		</div>
+		<div class="layout flex">
+			<section class="sidebar h-full w-1/5">
+				<div class="logo mb-4 px-3 py-2">
+					<img src="icon/icon.png" alt="" width="45px" />
+				</div>
+				<h6 class="ml-4 mb-3 font-bold">Projects</h6>
+				<div id="navList"></div>
+				<button
+					id="open-modal"
+					class="bg-button ml-8 mt-5 text-white font-thin py-2 px-5 rounded"
+				>
+					<i class="fa fa-plus"></i>
+					<span class="ml-3 font-normal text-sm">New Project</span>
+				</button>
+			</section>
+			<section
+				class="body h-full bg-gray-200 flex-1 flex flex-col items-center"
+			>
+				<div id="summary" class="flex justify-between mt-4 w-4/5 mb-5"></div>
+
+				<div
+					class="task-header  w-4/5 mb-6 flex justify-between mt-6 items-center"
+				>
+					<h5 class="font-bold text-lg">Interview</h5>
+					<button class="bg-button px-4 py-2  text-sm rounded" id="createTask">
+						<i class="fa fa-plus"></i> Create new task
+					</button>
+				</div>
+
+				<div class="tasks flex flex-col w-4/5">
+					<div
+						class="flex w-3/5 justify-between mb-4 bg-white py-1 px-1 rounded"
+					>
+						<button
+							class="tabs active px-4 py-2 flex-1 text-sm font-bold outline-none"
+						>
+							Today
+						</button>
+						<button
+							class=" tabs px-4 py-2 flex-1 text-sm font-bold outline-none"
+						>
+							All
+						</button>
+						<button
+							class="tabs px-4 py-2 flex-1 text-sm font-bold outline-none"
+						>
+							Completed
+						</button>
+					</div>
+					<div id="taskList"></div>
+				</div>
+			</section>
+		</div>
+
+		<script src="js/bootstrap.js"></script>
+		<script src="js/store.js"></script>
+		<script src="js/view.js"></script>
+		<script src="js/controller.js"></script>
+		<script src="js/index.js"></script>
+	</body>
+</html>
