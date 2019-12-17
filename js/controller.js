@@ -61,6 +61,15 @@
 		showActive() {
 			this.showAll();
 		}
+
+		// toggle tasks completion
+		toggleComplete(id, checkbox) {
+			let completed = checkbox.checked ? true : false;
+
+			this.model.save(id, { completed: completed }, () => {
+				this.showAll();
+			});
+		}
 	}
 
 	window.app.Controller = Controller;

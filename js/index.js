@@ -75,6 +75,17 @@ $$('#navList').addEventListener('click', e => {
 	}
 });
 
+$$('#taskList').addEventListener('click', e => {
+	let SpanOrInput = e.target.nodeName === 'INPUT';
+	if (SpanOrInput) {
+		let target = hasClassorParent(e.target, 'task');
+		if (target) {
+			Project.controller.toggleComplete(target.dataset.id, e.target);
+			// Project.controller.setActiveId(target.dataset.id);
+		}
+	}
+});
+
 class App {
 	constructor() {
 		this.storage = new app.Store('scheduler-list');

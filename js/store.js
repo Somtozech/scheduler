@@ -62,6 +62,43 @@
 			});
 		}
 
+		//save or update a task
+		save(id, data, callback = defaultCallback) {
+			chrome.storage.sync.get(this.dbName, store => {
+				let projects = store[this.dbName].projects;
+				let activeId = store[this.dbName].activeId;
+				let activeProject;
+
+				for (let project of projects) {
+					if (activeId == project.id) {
+						activeProject = project;
+						break;
+					}
+				}
+
+				if (typeof id !== 'object') {
+					let tasks = activeProject.tasks;
+					for (let task of tasks) {
+						if (task.id == id) {
+							for (let x in data) {
+								task[x] = data[x];
+							}
+							break;
+						}
+					}
+				} else {
+					data = id;
+					callback = data;
+					data.id = Date.now();
+					activeProject.tasks.push(data);
+				}
+
+				chrome.storage.sync.set(store, () => {
+					callback.call(this);
+				});
+			});
+		}
+
 		//find all tasks and project
 		findAll(callback) {
 			chrome.storage.sync.get(this.dbName, store => {
@@ -117,7 +154,7 @@
 			});
 		}
 
-		// save tasks
+		// save projects
 		createProject(name, callback = defaultCallback) {
 			chrome.storage.sync.get(this.dbName, store => {
 				let projects = store[this.dbName].projects;
