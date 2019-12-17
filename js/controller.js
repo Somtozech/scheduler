@@ -13,7 +13,7 @@
 
 			window.addEventListener('load', () => {
 				this.showProjectList();
-				this.showAll();
+				this.showActive();
 			});
 		}
 
@@ -59,7 +59,22 @@
 
 		// show tasks that occur today
 		showActive() {
-			this.showAll();
+			this.model.findTasks({ completed: false }, data => {
+				let filtered = data.filter(task => {
+					const today = new Date();
+					let taskDate = new Date(task.date);
+					return (
+						taskDate.getDate() == today.getDate() &&
+						taskDate.getMonth() == today.getMonth() &&
+						taskDate.getFullYear() == today.getFullYear()
+					);
+				});
+
+				this.taskList.innerHTML = this.view.compile(filtered);
+				this.model.findAll(data => {
+					this.summary.innerHTML = this.view.compileTaskCount(data);
+				});
+			});
 		}
 
 		// toggle tasks completion
@@ -67,6 +82,13 @@
 			let completed = checkbox.checked ? true : false;
 
 			this.model.save(id, { completed: completed }, () => {
+				this.showAll();
+			});
+		}
+
+		//create tasks
+		createTask(task) {
+			this.model.save(task, () => {
 				this.showAll();
 			});
 		}

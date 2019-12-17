@@ -22,6 +22,9 @@ closeModal.onclick = function() {
 
 createTask.onclick = function() {
 	taskModal.style.display = 'block';
+	let date = new Date();
+	$$("input[type='date']").value = date.toISOString().substr(0, 10);
+	$$("input[type='time']").value = new Date().toISOString().substr(11, 5);
 };
 
 closeTaskModal.onclick = function() {
@@ -84,6 +87,19 @@ $$('#taskList').addEventListener('click', e => {
 			// Project.controller.setActiveId(target.dataset.id);
 		}
 	}
+});
+
+$$('#taskModal form').addEventListener('submit', e => {
+	e.preventDefault();
+	let title = $$("input[name='title']").value;
+	let date = $$("input[name='date']").value;
+	let time = $$("input[name='time']").value;
+
+	console.log(time.split(':'));
+	let [hour, min] = time.split(':');
+	let dateTime = new Date(date).setHours(hour, min);
+	Project.controller.createTask({ title, date: dateTime });
+	taskModal.style.display = 'none';
 });
 
 class App {

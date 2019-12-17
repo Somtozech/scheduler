@@ -6,7 +6,7 @@
     >
       <div>
         <h6 class="font-bold">{{title}}</h6>
-        <p class="text-sm font-thin text-gray-400">Today at 9:00am</p>
+        <p class="text-sm font-thin text-gray-400">{{date}}</p>
       </div>
       <label class="round">
         <input type="checkbox" id="checkbox" {{checked}} />
@@ -43,6 +43,10 @@
 				template = template.replace('{{id}}', task.id);
 				template = template.replace('{{title}}', task.title);
 				template = template.replace('{{checked}}', checked);
+				template = template.replace(
+					'{{date}}',
+					new Date(task.date).toDateString()
+				);
 
 				view += template;
 			}

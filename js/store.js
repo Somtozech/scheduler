@@ -1,45 +1,16 @@
 (function(window) {
 	const projects = [
 		{
-			id: '1',
-			name: 'Javascript',
+			name: 'Welcome to Scheduler',
+			id: Date.now(),
 			tasks: [
 				{
-					id: '1_1',
-					title: 'Started Learning Javascript',
-					date: new Date(),
-					completed: true
-				},
-				{
-					id: '1_2',
-					title: 'Started Object Types in Javascript',
-					date: new Date(),
-					completed: false
-				},
-				{
-					id: '1_3',
-					title: 'Data Structure and Algorithm',
-					date: new Date(),
-					completed: false
+					id: Date.now(),
+					title: 'Create a new Project',
+					completed: false,
+					date: Date.now()
 				}
 			]
-		},
-		{
-			id: 2,
-			name: 'Project Defense',
-			tasks: [
-				{
-					id: '1_3',
-					title: 'Data Structure and Algorithm',
-					date: new Date(),
-					completed: false
-				}
-			]
-		},
-		{
-			id: 3,
-			name: 'IT Defense',
-			tasks: []
 		}
 	];
 
@@ -87,14 +58,14 @@
 						}
 					}
 				} else {
-					data = id;
 					callback = data;
+					data = id;
 					data.id = Date.now();
 					activeProject.tasks.push(data);
 				}
 
 				chrome.storage.sync.set(store, () => {
-					callback.call(this);
+					callback.call(this, store[this.dbName].projects);
 				});
 			});
 		}
