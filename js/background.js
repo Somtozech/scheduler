@@ -37,8 +37,7 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 
 function showNotification(a) {
 	let dbName = 'scheduler-list';
-	console.log(a);
-	chrome.storage.get(dbName, store => {
+	chrome.storage.local.get(dbName, store => {
 		let activeId = store[dbName].activeId;
 		let projects = store[dbName].projects;
 
@@ -46,7 +45,7 @@ function showNotification(a) {
 
 		let task = activeProject.tasks.find(t => t.id == a);
 
-		if (task.completed) {
+		if ((task && task.completed) || !task) {
 			chrome.alarms.clear(a);
 		} else {
 			chrome.notifications.create(
@@ -55,7 +54,7 @@ function showNotification(a) {
 					iconUrl: chrome.runtime.getURL('icon/icon.png'),
 					title: 'Overdue',
 					type: 'basic',
-					message: 'Time Scheduled For Task has passed. Completion overdue'
+					message: `Time Scheduled For completion of '${task.title}' has passed. Completion overdue`
 				},
 				function(id) {
 					toggleAlarmSound(a);
@@ -72,7 +71,7 @@ chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
 		let min = parseInt(ms / 6e4);
 
 		console.log(min);
-		chrome.alarms.create(String(msg.task.id), { delayInMinutes: min });
+		chrome.alarms.create(String(msg.task.id), { delayInMinutes: min + 1 });
 	}
 });
 
@@ -82,5 +81,5 @@ function toggleAlarmSound(a) {
 }
 // when there are alarms
 chrome.alarms.onAlarm.addListener(function(a) {
-	showNotification(a);
+	showNotification(a.name);
 });
