@@ -75,6 +75,7 @@ $$('#navList').addEventListener('click', e => {
 	let target = hasClassorParent(e.target, 'navlink');
 	if (target) {
 		Project.controller.setActiveId(target.dataset.id);
+		tabs[0].click();
 	}
 });
 
@@ -95,7 +96,6 @@ $$('#taskModal form').addEventListener('submit', e => {
 	let date = $$("input[name='date']").value;
 	let time = $$("input[name='time']").value;
 
-	console.log(time.split(':'));
 	let [hour, min] = time.split(':');
 	let dateTime = new Date(date).setHours(hour, min);
 	Project.controller.createTask({ title, date: dateTime });

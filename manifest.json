@@ -6,7 +6,7 @@
 		"scripts": ["js/background.js"],
 		"persistent": false
 	},
-	"permissions": ["storage"],
+	"permissions": ["alarms", "storage", "notifications"],
 	"browser_action": {
 		"default_icon": "icon/icon.png"
 	},

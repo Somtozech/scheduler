@@ -1,41 +1,18 @@
 (function(window) {
-	const projects = [
-		{
-			name: 'Welcome to Scheduler',
-			id: Date.now(),
-			tasks: [
-				{
-					id: Date.now(),
-					title: 'Create a new Project',
-					completed: false,
-					date: Date.now()
-				}
-			]
-		}
-	];
-
 	let defaultCallback = function() {};
 
 	class Store {
 		constructor(name, callback = defaultCallback) {
 			this.dbName = name;
 
-			chrome.storage.sync.get(name, function(store) {
-				if (name in store) {
-					callback.call(this, store[name].projects);
-				} else {
-					store = {};
-					store[name] = { projects: projects };
-					chrome.storage.sync.set(store, function() {
-						callback.call(this, store[name].projects);
-					});
-				}
+			chrome.storage.local.get(name, function(store) {
+				callback.call(this, store[name].projects);
 			});
 		}
 
 		//save or update a task
 		save(id, data, callback = defaultCallback) {
-			chrome.storage.sync.get(this.dbName, store => {
+			chrome.storage.local.get(this.dbName, store => {
 				let projects = store[this.dbName].projects;
 				let activeId = store[this.dbName].activeId;
 				let activeProject;
@@ -64,22 +41,22 @@
 					activeProject.tasks.push(data);
 				}
 
-				chrome.storage.sync.set(store, () => {
-					callback.call(this, store[this.dbName].projects);
+				chrome.storage.local.set(store, () => {
+					callback.call(this, data);
 				});
 			});
 		}
 
 		//find all tasks and project
 		findAll(callback) {
-			chrome.storage.sync.get(this.dbName, store => {
+			chrome.storage.local.get(this.dbName, store => {
 				callback.call(this, store[this.dbName].projects);
 			});
 		}
 
 		// find all tasks  available in the active Project if any or just return the tasks in the first project
 		find(callback) {
-			chrome.storage.sync.get(this.dbName, store => {
+			chrome.storage.local.get(this.dbName, store => {
 				let projects = store[this.dbName].projects;
 				let activeId = store[this.dbName].activeId;
 				if (typeof activeId !== 'undefined') {
@@ -92,7 +69,7 @@
 
 				store[this.dbName].activeId = projects[0].id;
 
-				chrome.storage.sync.set(store, () => {
+				chrome.storage.local.set(store, () => {
 					callback.call(this, projects[0]);
 				});
 			});
@@ -100,34 +77,33 @@
 
 		findTasks(query, callback = defaultCallback) {
 			if (!query) return;
-			chrome.storage.sync.get(this.dbName, store => {
+			chrome.storage.local.get(this.dbName, store => {
 				let projects = store[this.dbName].projects;
+				let activeId = store[this.dbName].activeId;
 
-				let filtered = [];
-				for (let project of projects) {
-					let filteredTask = project.tasks.filter(task => {
-						for (let x in query) {
-							return query[x] === task[x];
-						}
-					});
+				let activeProject = projects.find(p => p.id == activeId);
 
-					filtered = [...filtered, ...filteredTask];
-				}
+				let activeTasks = activeProject.tasks.filter(task => {
+					for (let x in query) {
+						return query[x] === task[x];
+					}
+				});
 
-				callback.call(this, filtered);
+				callback.call(this, activeTasks);
 			});
 		}
 
 		findProjects(callback = defaultCallback) {
-			chrome.storage.sync.get(this.dbName, store => {
+			chrome.storage.local.get(this.dbName, store => {
 				let projects = store[this.dbName].projects;
-				callback.call(this, projects);
+				let activeId = store[this.dbName].activeId;
+				callback.call(this, projects, activeId);
 			});
 		}
 
 		// save projects
 		createProject(name, callback = defaultCallback) {
-			chrome.storage.sync.get(this.dbName, store => {
+			chrome.storage.local.get(this.dbName, store => {
 				let projects = store[this.dbName].projects;
 				let data = {
 					name,
@@ -136,7 +112,7 @@
 				};
 
 				projects.push(data);
-				chrome.storage.sync.set(store, () => {
+				chrome.storage.local.set(store, () => {
 					callback.call(this, store[this.dbName].projects, data.id);
 				});
 			});
@@ -145,9 +121,9 @@
 		// sets the active Project Id
 
 		setActiveId(id, callback = defaultCallback) {
-			chrome.storage.sync.get(this.dbName, store => {
+			chrome.storage.local.get(this.dbName, store => {
 				store[this.dbName].activeId = id;
-				chrome.storage.sync.set(store, () => {
+				chrome.storage.local.set(store, () => {
 					callback.call(this, store[this.dbName].projects);
 				});
 			});

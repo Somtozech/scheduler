@@ -19,9 +19,8 @@
 
 		// update Project List in the sidebar
 		showProjectList() {
-			this.model.findProjects(data => {
-				let id = data[0].id;
-				this.projectList.innerHTML = this.view.compileProjects(data, id);
+			this.model.findProjects((data, activeId) => {
+				this.projectList.innerHTML = this.view.compileProjects(data, activeId);
 			});
 		}
 
@@ -34,7 +33,7 @@
 
 		setActiveId(id) {
 			this.model.setActiveId(id, data => {
-				this.showAll();
+				this.showActive();
 				this.projectList.innerHTML = this.view.compileProjects(data, id);
 			});
 		}
@@ -88,8 +87,10 @@
 
 		//create tasks
 		createTask(task) {
-			this.model.save(task, () => {
+			this.model.save(task, task => {
+				// console.log(task);
 				this.showAll();
+				chrome.runtime.sendMessage({ setAlarm: true, task });
 			});
 		}
 	}
