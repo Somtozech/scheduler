@@ -8,6 +8,15 @@ body {
 	padding-bottom: 5rem;
 }
 
+.sidebar {
+	width: 250px;
+}
+.sidebar a {
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
 .sidebar a.active {
 	border-right: 3px solid #e0253f;
 	color: #ef798a;

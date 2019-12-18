@@ -66,7 +66,13 @@ function showNotification(a) {
 }
 chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
 	if (msg.setAlarm) {
-		chrome.alarms.create(String(msg.task.id), { delayInMinutes: 1 });
+		let taskDate = new Date(msg.task.date).getTime();
+		let nowsDate = new Date().getTime();
+		let ms = taskDate - nowsDate;
+		let min = parseInt(ms / 6e4);
+
+		console.log(min);
+		chrome.alarms.create(String(msg.task.id), { delayInMinutes: min });
 	}
 });
 

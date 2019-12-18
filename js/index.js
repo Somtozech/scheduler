@@ -26,8 +26,13 @@ createTask.onclick = function() {
 	taskModal.style.display = 'block';
 	let date = new Date();
 	$$("input[type='date']").value = date.toISOString().substr(0, 10);
-	$$("input[type='time']").value = new Date().toISOString().substr(11, 5);
 };
+
+function clearTaskForm() {
+	$$("input[name='title']").value = '';
+	$$("input[name='date']").value = '';
+	$$("input[name='time']").value = '';
+}
 
 closeTaskModal.onclick = function() {
 	taskModal.style.display = 'none';
@@ -59,6 +64,7 @@ createProjectForm.addEventListener('submit', e => {
 	let name = projectInput.value.trim();
 	Project.controller.addProject(name);
 	modal.style.display = 'none';
+	projectInput.value = '';
 });
 
 /**
@@ -107,6 +113,7 @@ $$('#taskModal form').addEventListener('submit', e => {
 	Project.controller.createTask({ title, date: dateTime }, activeTab);
 
 	taskModal.style.display = 'none';
+	clearTaskForm();
 });
 
 class App {
