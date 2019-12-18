@@ -11,6 +11,12 @@
 			this.showCompleted = this.showCompleted.bind(this);
 			this.showActive = this.showActive.bind(this);
 
+			this.showActiveTab = {
+				today: this.showActive,
+				completed: this.showCompleted,
+				all: this.showAll
+			};
+
 			window.addEventListener('load', () => {
 				this.showProjectList();
 				this.showActive();
@@ -53,6 +59,9 @@
 		showCompleted() {
 			this.model.findTasks({ completed: true }, data => {
 				this.taskList.innerHTML = this.view.compile(data);
+				this.model.findAll(data => {
+					this.summary.innerHTML = this.view.compileTaskCount(data);
+				});
 			});
 		}
 
@@ -77,20 +86,27 @@
 		}
 
 		// toggle tasks completion
-		toggleComplete(id, checkbox) {
+		toggleComplete(id, checkbox, activeTab = 'today') {
 			let completed = checkbox.checked ? true : false;
 
 			this.model.save(id, { completed: completed }, () => {
-				this.showAll();
+				this.showActiveTab[activeTab]();
 			});
 		}
 
 		//create tasks
-		createTask(task) {
+		createTask(task, activeTab = 'today') {
 			this.model.save(task, task => {
-				// console.log(task);
-				this.showAll();
+				this.showActiveTab[activeTab]();
 				chrome.runtime.sendMessage({ setAlarm: true, task });
+			});
+		}
+
+		//delete  a task
+		deleteTask(id, activeTab = 'today') {
+			this.model.remove(id, () => {
+				chrome.alarms.clear(String(id));
+				this.showActiveTab[activeTab]();
 			});
 		}
 	}

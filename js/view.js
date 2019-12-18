@@ -2,16 +2,20 @@
 	class View {
 		constructor() {
 			this.defaultTemplate = `<div data-id="{{id}}"
-      class="task flex justify-between items-center rounded px-5 py-3 bg-white w-3/5"
-    >
-      <div>
+      class="task flex items-center rounded px-5 py-3 bg-white w-3/5"
+		>
+			<label class="round">
+				<input type="checkbox" id="checkbox" {{checked}} />
+				<span for="checkbox"></span>
+			</label>
+      <div class="ml-4">
         <h6 class="font-bold">{{title}}</h6>
         <p class="text-sm font-thin text-gray-400">{{date}}</p>
       </div>
-      <label class="round">
-        <input type="checkbox" id="checkbox" {{checked}} />
-        <span for="checkbox"></span>
-      </label>
+     
+			<button class="delete text-red-500 ml-auto">
+			<i class="delete fa fa-trash fa-2x"></i>
+		</button>
 		</div>`;
 
 			this.defaultProjectTemplate = `<a data-id={{id}} class="navlink block py-2 pl-8 {{active}} font-normal text-gray-500">

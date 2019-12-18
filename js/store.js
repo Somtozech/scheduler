@@ -37,6 +37,7 @@
 				} else {
 					callback = data;
 					data = id;
+					data.completed = false;
 					data.id = Date.now();
 					activeProject.tasks.push(data);
 				}
@@ -125,6 +126,34 @@
 				store[this.dbName].activeId = id;
 				chrome.storage.local.set(store, () => {
 					callback.call(this, store[this.dbName].projects);
+				});
+			});
+		}
+
+		//delete task
+		remove(id, callback) {
+			chrome.storage.local.get(this.dbName, store => {
+				let projects = store[this.dbName].projects;
+				let activeId = store[this.dbName].activeId;
+
+				let activeProject;
+
+				for (let project of projects) {
+					if (project.id == activeId) {
+						activeProject = project;
+						break;
+					}
+				}
+
+				let tasks = activeProject.tasks;
+				tasks.forEach((task, i) => {
+					if (task.id == id) {
+						tasks.splice(i, 1);
+					}
+				});
+
+				chrome.storage.local.set(store, () => {
+					callback.call(this);
 				});
 			});
 		}

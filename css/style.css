@@ -108,6 +108,10 @@ body {
 	margin-top: 1px;
 }
 
+.task button {
+	outline: none;
+}
+
 .round input[type='checkbox'] {
 	visibility: hidden;
 }

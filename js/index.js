@@ -9,6 +9,8 @@ const navLinks = $('.navlink');
 const createProjectForm = $$('#createProject');
 const projectInput = $$('#createProject input');
 
+let activeTab = 'today';
+
 tabs.forEach(tab =>
 	tab.addEventListener('click', e => {
 		const type = e.target.textContent.trim().toLowerCase();
@@ -48,6 +50,7 @@ function changeTab(e, type) {
 	};
 	tabs.forEach(tab => tab.classList.remove('active'));
 	e.target.classList.add('active');
+	activeTab = type;
 	map[type]();
 }
 
@@ -81,12 +84,15 @@ $$('#navList').addEventListener('click', e => {
 
 $$('#taskList').addEventListener('click', e => {
 	let SpanOrInput = e.target.nodeName === 'INPUT';
+	let target = hasClassorParent(e.target, 'task');
 	if (SpanOrInput) {
-		let target = hasClassorParent(e.target, 'task');
 		if (target) {
-			Project.controller.toggleComplete(target.dataset.id, e.target);
-			// Project.controller.setActiveId(target.dataset.id);
+			Project.controller.toggleComplete(target.dataset.id, e.target, activeTab);
 		}
+	}
+
+	if (e.target.classList.contains('delete')) {
+		Project.controller.deleteTask(target.dataset.id, activeTab);
 	}
 });
 
@@ -98,7 +104,8 @@ $$('#taskModal form').addEventListener('submit', e => {
 
 	let [hour, min] = time.split(':');
 	let dateTime = new Date(date).setHours(hour, min);
-	Project.controller.createTask({ title, date: dateTime });
+	Project.controller.createTask({ title, date: dateTime }, activeTab);
+
 	taskModal.style.display = 'none';
 });
 
